@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Loan Approval — Ultra Premium</title>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <style>
+        :root{
+            --bg1:#071226; --bg2:#071b2e;
+            --accent1:#7c5cff; --accent2:#00d4ff;
+            --muted: rgba(255,255,255,0.65);
+            --success:#00d97e; --danger:#ff6b6b;
+        }
+        body{
+            margin:0; min-height:100vh; font-family:Inter,system-ui,Arial;
+            background:linear-gradient(180deg,var(--bg1),var(--bg2));
+            color:#eaf2ff; display:flex; align-items:center; justify-content:center; padding:36px;
+        }
+        .wrap{width:100%;max-width:1160px;display:grid;grid-template-columns:420px 1fr;gap:28px}
+        .card{background:rgba(255,255,255,0.03);border-radius:16px;padding:22px;border:1px solid rgba(255,255,255,0.04);}
+        .brand{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+        .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#021026}
+        label{font-size:13px;color:var(--muted)}
+        input,select{width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.05);color:#fff;border:none;margin-top:6px}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:12px;border-radius:12px;color:#021026;font-weight:700;margin-top:12px;width:100%}
+        
+        .result-card{margin-top:15px;padding:16px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center}
+        .approved{padding:8px 12px;border-radius:999px;font-weight:700;background:#00d97e22;color:#00ffb3}
+        .rejected{padding:8px 12px;border-radius:999px;font-weight:700;background:#ff6b6b22;color:#ff7b7b}
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        
+        <!-- LEFT FORM -->
+        <div class="card">
+            <div class="brand">
+                <div class="logo">LP</div>
+                <div>
+                    <h1>LoanPredict — Ultra</h1>
+                    <p class="lead">Fast loan approval predictions using RandomForest.</p>
+                </div>
+            </div>
+
+            <form action="/predict" method="POST">
+                <div class="row">
+                    <div>
+                        <label>Gender</label>
+                        <select name="gender"><option>Male</option><option>Female</option></select>
+                    </div>
+                    <div>
+                        <label>Married</label>
+                        <select name="married"><option>Yes</option><option>No</option></select>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <div>
+                        <label>Education</label>
+                        <select name="education"><option>Graduate</option><option>Not Graduate</option></select>
+                    </div>
+                    <div>
+                        <label>Property Area</label>
+                        <select name="property_area"><option>Urban</option><option>Semiurban</option><option>Rural</option></select>
+                    </div>
+                </div>
+
+                <label style="margin-top:14px">Applicant Income</label>
+                <input type="number" name="applicant_income" required>
+
+                <label style="margin-top:12px">Co-applicant Income</label>
+                <input type="number" name="coapplicant_income" required>
+
+                <label style="margin-top:12px">Loan Amount (in thousands)</label>
+                <input type="number" name="loan_amount" required>
+
+                <label style="margin-top:12px">Loan Term (months)</label>
+                <input type="number" name="loan_term" required>
+
+                <label style="margin-top:12px">Credit History</label>
+                <select name="credit_history"><option value="1">Yes</option><option value="0">No</option></select>
+
+                <button class="btn" type="submit">Predict Now</button>
+            </form>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="card">
+            <h3>Model Summary</h3>
+            <p style="color:var(--muted)">RandomForest Classifier • 614 Records</p>
+
+            <div style="display:flex;gap:20px;margin-top:12px">
+                <div><strong>78%</strong><div style="color:var(--muted)">Accuracy</div></div>
+                <div><strong>11</strong><div style="color:var(--muted)">Features</div></div>
+            </div>
+
+            <!-- FINAL FIXED RESULT AREA -->
+            {% if result %}
+            <div class="result-card">
+                <div class="result-text">{{ result }}</div>
+                {% if "Approved" in result %}
+                <div class="approved">APPROVED</div>
+                {% else %}
+                <div class="rejected">REJECTED</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>
